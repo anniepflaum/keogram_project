@@ -1,20 +1,9 @@
-# macOS
 .DS_Store
-
-# Python
 __pycache__/
 *.py[cod]
-*.egg-info/
 .venv/
 venv/
-
-# Jupyter
 .ipynb_checkpoints/
-
-# Node
-node_modules/
-
-# Secrets
+*.nc.gz
+*.tar.gz
 .env
-*.key
-*.pem
