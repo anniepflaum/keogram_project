@@ -19,40 +19,73 @@ CAMERA     = "asi3"   # ..._asi3_rgb-keogram.png
 GOES_BASE  = "https://data.ngdc.noaa.gov/platforms/solar-space-observing-satellites/goes/goes18/l1b/mag-l1b-flat"
 DSCVR_BASE = "https://www.ngdc.noaa.gov/dscovr/data"
 
-OUT_FULL   = Path.home() / "Documents/keogram_project/overlaid_full"
-OUT_PART   = Path.home() / "Documents/keogram_project/overlaid_partial"
+OUT_FULL   = Path.home() / "Documents" / "keogram_project" / "overlaid_full"
+OUT_PART   = Path.home() / "Documents" / "keogram_project" / "overlaid_partial"
 OUT_FULL.mkdir(parents=True, exist_ok=True)
 OUT_PART.mkdir(parents=True, exist_ok=True)
 
-UA = {"User-Agent": "keogram-overlay/streaming (macOS)"}
-BROWSER_UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+UA = {"User-Agent": "keogram-overlay/streaming (cross-platform)"}
+BROWSER_UA = ("Mozilla/5.0 (X11; Linux x86_64) "
               "AppleWebKit/537.36 (KHTML, like Gecko) "
               "Chrome/120.0.0.0 Safari/537.36")
+REQ_RETRIES = 3
+CURL_CONNECT_TIMEOUT = "30"
+CURL_MAX_TIME = "120"
 
 # --------------- HTTP helpers ---------------
+def _curl_fetch(url: str, as_text: bool):
+    if not shutil.which("curl"):
+        raise RuntimeError("curl not found")
+    args = [
+        "curl", "-sL",
+        "--connect-timeout", CURL_CONNECT_TIMEOUT,
+        "--max-time", CURL_MAX_TIME,
+        "-A", BROWSER_UA,
+        url,
+    ]
+    res = subprocess.run(args, check=False, capture_output=True, text=as_text)
+    if res.returncode != 0:
+        raise RuntimeError(f"curl exit {res.returncode} stderr: {res.stderr.strip() if res.stderr else ''}")
+    return res.stdout if as_text else res.stdout.encode() if isinstance(res.stdout, str) else res.stdout
+
+
 def http_get_text(url, timeout=30):
-    try:
-        r = requests.get(url, headers=UA, timeout=timeout)
-        r.raise_for_status()
-        return r.text
-    except Exception:
-        pass
+    errors = []
+    # Prefer curl (works even if Python DNS has issues)
     if shutil.which("curl"):
-        res = subprocess.run(["curl", "-sL", "-A", BROWSER_UA, url],
-                             check=False, capture_output=True, text=True)
-        if res.returncode == 0:
-            return res.stdout
-    raise RuntimeError(f"Failed to GET HTML: {url}")
+        try:
+            return _curl_fetch(url, as_text=True)
+        except Exception as e:
+            errors.append(str(e))
+
+    # Retry requests a few times
+    for attempt in range(1, REQ_RETRIES + 1):
+        try:
+            r = requests.get(url, headers=UA, timeout=timeout)
+            if r.status_code == 200:
+                return r.text
+            errors.append(f"requests HTTP {r.status_code}")
+        except Exception as e:
+            errors.append(f"requests error {e}")
+    detail = "; ".join(errors) if errors else "no detail"
+    raise RuntimeError(f"Failed to GET HTML: {url} ({detail})")
 
 def http_get_bytes(url, timeout=120):
+    errors = []
     if shutil.which("curl"):
-        res = subprocess.run(["curl", "-sL", "-A", BROWSER_UA, url],
-                             check=False, capture_output=True)
-        if res.returncode == 0 and res.stdout:
-            return res.stdout
-    r = requests.get(url, headers=UA, timeout=timeout)
-    r.raise_for_status()
-    return r.content
+        try:
+            return _curl_fetch(url, as_text=False)
+        except Exception as e:
+            errors.append(str(e))
+    for attempt in range(1, REQ_RETRIES + 1):
+        try:
+            r = requests.get(url, headers=UA, timeout=timeout)
+            r.raise_for_status()
+            return r.content
+        except Exception as e:
+            errors.append(f"requests error {e}")
+    detail = "; ".join(errors) if errors else "no detail"
+    raise RuntimeError(f"Failed to GET bytes: {url} ({detail})")
 
 # --------------- AMISR scraping ---------------
 def amisr_day_url(y, m, d):
@@ -244,16 +277,20 @@ def make_overlay_for_day(date_str, mode):
         ax2.plot(gh, hp, color="#f28e2b")  # GOES in orange
         go_min, go_max = np.nanmin(hp), np.nanmax(hp)
         ax2.set_ylim(min(0, go_min), max(130, go_max))
-    ax2.set_ylabel("Hp (nT)")
+    ax2.set_ylabel("Hp (nT)", color="#f28e2b")
+    ax2.tick_params(axis="y", colors="#f28e2b")
+    ax2.spines["right"].set_color("#f28e2b")
     ax2.set_xlim(h0, h1)
 
     ax3 = ax1.twinx()
     ax3.spines["right"].set_position(("outward", 60))
     if not df.empty:
-        ax3.plot(df["hour"], df["bz"], linewidth=1.5)
+        ax3.plot(df["hour"], df["bz"], linewidth=1.5, color="#1f77b4")
         bz_min, bz_max = df["bz"].min(), df["bz"].max()
         ax3.set_ylim(min(-15, bz_min), max(15, bz_max))
-    ax3.set_ylabel("Bz GSE (nT)")
+    ax3.set_ylabel("Bz GSE (nT)", color="#1f77b4")
+    ax3.tick_params(axis="y", colors="#1f77b4")
+    ax3.spines["right"].set_color("#1f77b4")
     ax3.set_xlim(h0, h1)
     ax3.axhline(0, linestyle="--", linewidth=1, alpha=0.7)
 

@@ -1,0 +1,7 @@
+requests
+Pillow
+beautifulsoup4
+matplotlib
+numpy
+pandas
+netCDF4
