@@ -155,7 +155,7 @@ def stitch_hours(y, m, d, h0, h1):
         x += im.width
     return np.array(canvas)
 
-# ---- NEW: fetch the full-day keogram file directly (no stitching) ----
+# ---- Keogram (in-memory) ----
 def find_full_keogram_name(y, m, d):
     """Return the full-keogram filename in the day directory."""
     day_html = http_get_text(amisr_day_url(y, m, d))
