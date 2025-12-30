@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PKR DASC stacked keogram 2025-12</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #111;
+      color: #eee;
+      margin: 0;
+      padding: 1rem;
+    }
+    h1 {
+      margin-top: 0;
+    }
+    #container {
+      position: relative;
+      display: inline-block;
+      border: 1px solid #444;
+    }
+    #keogram {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      cursor: crosshair;
+    }
+    #info {
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      color: #ccc;
+      white-space: pre-line;
+    }
+    #info strong {
+      color: #fff;
+    }
+    #hover-tooltip {
+        position: absolute;
+        padding: 2px 6px;
+        font-size: 12px;
+        background: rgba(0, 0, 0, 0.85);
+        color: #fff;
+        border-radius: 3px;
+        pointer-events: none;
+        opacity: 0;
+        transform: translate(8px, 8px); /* small offset from cursor */
+        transition: opacity 0.05s linear;
+        z-index: 20;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>PKR stacked keogram – December 2025</h1>
+  <p>Click anywhere on the stacked keogram to open the corresponding all-sky movie ~15 minutes before that time (UT).</p>
+
+  <div id="keogram-container" style="position: relative; display: inline-block;">
+    <img
+      id="keogram"
+      src="stacked_keograms_202512.png"
+      alt="PKR DASC stacked keogram"
+    >
+    <canvas
+      id="keogram-overlay"
+      style="position: absolute; top: 0; left: 0; pointer-events: none;"
+    ></canvas>
+  </div>
+
+  <div id="hover-tooltip"></div>
+
+  <div id="info">
+    Click on the image to select a day and time.
+  </div>
+
+  <video id="player" style="display:none;"></video>
+
+  <script>
+    const YEAR = 2025;
+    const MONTH = 12;
+
+    // JSON files should be in the same folder as this HTML.
+    const keogramMeta = {
+      "year": 2025,
+      "month": 12,
+      "days": [
+        {
+          "ymd": "20251201",
+          "day": 1,
+          "h0": 3.0,
+          "h1": 19.0,
+          "has_video": true
+        },
+        {
+          "ymd": "20251202",
+          "day": 2,
+          "h0": 1.0,
+          "h1": 19.0,
+          "has_video": true
+        },
+        {
+          "ymd": "20251203",
+          "day": 3,
+          "h0": 1.0,
+          "h1": 19.0,
+          "has_video": false
+        },
+        {
+          "ymd": "20251204",
+          "day": 4,
+          "h0": 1.0,
+          "h1": 19.0,
+          "has_video": true
+        },
+        {
+          "ymd": "20251205",
+          "day": 5,
+          "h0": 1.0,
+          "h1": 19.0,
+          "has_video": true
+        },
+        {
+          "ymd": "20251206",
+          "day": 6,
+          "h0": 0.0,
+          "h1": 19.0,
+          "has_video": true
+        },
+        {
+          "ymd": "20251207",
+          "day": 7,
+          "h0": 0.0,
+          "h1": 14.0,
+          "has_video": false
+        },
+        {
+          "ymd": "20251208",
+          "day": 8,
+          "h0": 1.0,
+          "h1": 19.0,
+          "has_video": true
+        },
+        {
+          "ymd": "20251209",
+          "day": 9,
+          "h0": 0.0,
+          "h1": 19.0,
+          "has_video": true
+        },
+        {
+          "ymd": "20251210",
+          "day": 10,
+          "h0": 0.0,
+          "h1": 19.0,
+          "has_video": true
+        },
+        {
+          "ymd": "20251211",
+          "day": 11,
+          "h0": 0.0,
+          "h1": 19.0,
+          "has_video": true
+        },
+        {
+          "ymd": "20251214",
+          "day": 14,
+          "h0": 0.0,
+          "h1": 16.0,
+          "has_video": true
+        },
+        {
+          "ymd": "20251215",
+          "day": 15,
+          "h0": 2.0,
+          "h1": 19.0,
+          "has_video": true
+        },
+        {
+          "ymd": "20251216",
+          "day": 16,
+          "h0": 0.0,
+          "h1": 19.0,
+          "has_video": true
+        },
+        {
+          "ymd": "20251217",
+          "day": 17,
+          "h0": 0.0,
+          "h1": 19.0,
+          "has_video": true
+        },
+        {
+          "ymd": "20251218",
+          "day": 18,
+          "h0": 0.0,
+          "h1": 19.0,
+          "has_video": true
+        },
+        {
+          "ymd": "20251219",
+          "day": 19,
+          "h0": 0.0,
+          "h1": 19.0,
+          "has_video": true
+        },
+        {
+          "ymd": "20251220",
+          "day": 20,
+          "h0": 0.0,
+          "h1": 19.0,
+          "has_video": true
+        },
+        {
+          "ymd": "20251223",
+          "day": 23,
+          "h0": 0.0,
+          "h1": 19.0,
+          "has_video": true
+        }
+      ],
+      "global_min_hour": 0.0,
+      "global_max_hour": 19.0
+    }
+
+    const videoMeta = {
+      "year": 2025,
+      "month": 12,
+      "videos": [
+        {
+          "ymd": "20251201",
+          "video_file": "PKR_DASC_20251201_rgb_512.mp4",
+          "start_utc": "2025-12-01T03:32:01Z",
+          "end_utc": "2025-12-01T18:12:44Z"
+        },
+        {
+          "ymd": "20251202",
+          "video_file": "PKR_DASC_20251202_rgb_512.mp4",
+          "start_utc": "2025-12-02T01:04:39Z",
+          "end_utc": "2025-12-02T18:14:55Z"
+        },
+        {
+          "ymd": "20251204",
+          "video_file": "PKR_DASC_20251204_rgb_512.mp4",
+          "start_utc": "2025-12-04T01:01:57Z",
+          "end_utc": "2025-12-04T18:19:06Z"
+        },
+        {
+          "ymd": "20251205",
+          "video_file": "PKR_DASC_20251205_rgb_512.mp4",
+          "start_utc": "2025-12-05T01:00:44Z",
+          "end_utc": "2025-12-05T18:21:03Z"
+        },
+        {
+          "ymd": "20251206",
+          "video_file": "PKR_DASC_20251206_rgb_512.mp4",
+          "start_utc": "2025-12-06T00:59:35Z",
+          "end_utc": "2025-12-06T18:23:02Z"
+        },
+        {
+          "ymd": "20251208",
+          "video_file": "PKR_DASC_20251208_rgb_512.mp4",
+          "start_utc": "2025-12-08T01:54:47Z",
+          "end_utc": "2025-12-08T18:26:34Z"
+        },
+        {
+          "ymd": "20251209",
+          "video_file": "PKR_DASC_20251209_rgb_512.mp4",
+          "start_utc": "2025-12-09T00:56:43Z",
+          "end_utc": "2025-12-09T18:28:17Z"
+        },
+        {
+          "ymd": "20251210",
+          "video_file": "PKR_DASC_20251210_rgb_512.mp4",
+          "start_utc": "2025-12-10T00:55:57Z",
+          "end_utc": "2025-12-10T18:29:52Z"
+        },
+        {
+          "ymd": "20251211",
+          "video_file": "PKR_DASC_20251211_rgb_512.mp4",
+          "start_utc": "2025-12-11T00:55:16Z",
+          "end_utc": "2025-12-11T18:31:28Z"
+        },
+        {
+          "ymd": "20251214",
+          "video_file": "PKR_DASC_20251214_rgb_512.mp4",
+          "start_utc": "2025-12-14T00:53:55Z",
+          "end_utc": "2025-12-14T15:55:07Z"
+        },
+        {
+          "ymd": "20251215",
+          "video_file": "PKR_DASC_20251215_rgb_512.mp4",
+          "start_utc": "2025-12-15T02:28:44Z",
+          "end_utc": "2025-12-15T18:36:32Z"
+        },
+        {
+          "ymd": "20251216",
+          "video_file": "PKR_DASC_20251216_rgb_512.mp4",
+          "start_utc": "2025-12-16T00:53:28Z",
+          "end_utc": "2025-12-16T18:37:34Z"
+        },
+        {
+          "ymd": "20251217",
+          "video_file": "PKR_DASC_20251217_rgb_512.mp4",
+          "start_utc": "2025-12-17T00:53:26Z",
+          "end_utc": "2025-12-17T18:38:35Z"
+        },
+        {
+          "ymd": "20251218",
+          "video_file": "PKR_DASC_20251218_rgb_512.mp4",
+          "start_utc": "2025-12-18T00:53:30Z",
+          "end_utc": "2025-12-18T18:39:26Z"
+        },
+        {
+          "ymd": "20251219",
+          "video_file": "PKR_DASC_20251219_rgb_512.mp4",
+          "start_utc": "2025-12-19T00:53:40Z",
+          "end_utc": "2025-12-19T18:40:11Z"
+        },
+        {
+          "ymd": "20251220",
+          "video_file": "PKR_DASC_20251220_rgb_512.mp4",
+          "start_utc": "2025-12-20T00:53:56Z",
+          "end_utc": "2025-12-20T18:40:46Z"
+        },
+        {
+          "ymd": "20251223",
+          "video_file": "PKR_DASC_20251223_rgb_512.mp4",
+          "start_utc": "2025-12-23T00:55:23Z",
+          "end_utc": "2025-12-23T18:42:07Z"
+        }
+      ]
+    }
+
+    const videoBase = "https://optics.gi.alaska.edu/realtime/data/MPEG/PKR_DASC_512/";
+
+    const img       = document.getElementById("keogram");
+    const overlay   = document.getElementById("keogram-overlay");
+    const container = document.getElementById("keogram-container");
+    const infoBox   = document.getElementById("info");
+    const tooltip   = document.getElementById("hover-tooltip");
+
+    function init() {
+      const img       = document.getElementById("keogram");
+      const infoBox   = document.getElementById("info");
+      const tooltip   = document.getElementById("hover-tooltip");
+      const player    = document.getElementById("player");
+
+      if (!img || !infoBox || !tooltip || !player) {
+        console.error("Missing DOM elements needed for init().");
+        return;
+      }
+
+      // --- Build lookup of videos by ymd ---
+      const videoByYmd = {};
+      if (videoMeta && Array.isArray(videoMeta.videos)) {
+        for (const v of videoMeta.videos) {
+          const key = String(v.ymd);
+          videoByYmd[key] = v;
+        }
+      }
+      console.log("Video entries by day:", Object.keys(videoByYmd));
+
+      // --- Global hour range from meta ---
+      const rawH0 = keogramMeta.global_h0 ?? keogramMeta.global_min_hour ?? 0;
+      const rawH1 = keogramMeta.global_h1 ?? keogramMeta.global_max_hour ?? 24;
+
+      let globalH0 = Number(rawH0);
+      let globalH1 = Number(rawH1);
+
+      console.log(
+        "Global hour range from meta (raw):",
+        rawH0,
+        rawH1,
+        " -> parsed:",
+        globalH0,
+        globalH1
+      );
+
+      if (!Number.isFinite(globalH0) || !Number.isFinite(globalH1) || globalH0 >= globalH1) {
+        console.warn("Global hour values invalid; defaulting to 0–24.");
+        globalH0 = 0;
+        globalH1 = 24;
+      }
+
+      const days    = keogramMeta.days;
+      const numRows = days.length;
+
+      // ---------------- CLICK HANDLER ----------------
+      function handleClick(ev) {
+        const rect   = img.getBoundingClientRect();
+        const clickX = ev.clientX - rect.left;
+        const clickY = ev.clientY - rect.top;
+
+        const relX = clickX / rect.width;   // 0..1 time
+        const relY = clickY / rect.height;  // 0..1 stacked days
+
+        // Map Y to row index (nearest row center)
+        let rowFloat = relY * numRows;
+        let rowIndex = Math.round(rowFloat - 0.5);
+        if (rowIndex < 0) rowIndex = 0;
+        if (rowIndex >= numRows) rowIndex = numRows - 1;
+
+        const dayEntry = days[rowIndex];
+        const ymd      = String(dayEntry.ymd);
+
+        console.log("Click mapping:", {
+          clickX: clickX.toFixed(1),
+          clickY: clickY.toFixed(1),
+          relX: relX.toFixed(3),
+          relY: relY.toFixed(3),
+          rowFloat: rowFloat.toFixed(3),
+          rowIndex,
+          ymd
+        });
+
+        if (!/^\d{8}$/.test(ymd)) {
+          console.error("Bad ymd format:", ymd);
+          alert("Internal error: bad date code " + ymd);
+          return;
+        }
+
+        // X → UT using globalH0/globalH1
+        const fracHour      = globalH0 + relX * (globalH1 - globalH0);
+        const hourInt       = Math.floor(fracHour);
+        const minutesFloat  = (fracHour - hourInt) * 60;
+        const minuteInt     = Math.floor(minutesFloat);
+        const secondsFloat  = (minutesFloat - minuteInt) * 60;
+        let   secondInt     = Math.round(secondsFloat);
+
+        let h = hourInt;
+        let m = minuteInt;
+        let s = secondInt;
+
+        if (s >= 60) {
+          s -= 60;
+          m += 1;
+        }
+        if (m >= 60) {
+          m -= 60;
+          h += 1;
+        }
+
+        const year     = parseInt(ymd.slice(0, 4), 10);
+        const monthIdx = parseInt(ymd.slice(4, 6), 10) - 1; // JS months 0–11
+        const day      = parseInt(ymd.slice(6, 8), 10);
+
+        const clickMs = Date.UTC(year, monthIdx, day, h, m, s);
+        if (!Number.isFinite(clickMs)) {
+          console.error("Invalid clickMs from date pieces:", { year, monthIdx, day, h, m, s });
+          alert("Internal error computing click time – see console.");
+          return;
+        }
+
+        // --- Video metadata for that day ---
+        const vid = videoByYmd[ymd];
+        if (!vid) {
+          console.warn("No video entry for day", ymd);
+          alert("No video available for this day (" + ymd + ").");
+          return;
+        }
+
+        const videoStartMs = Date.parse(vid.start_utc);
+        const videoEndMs   = Date.parse(vid.end_utc);
+        if (!Number.isFinite(videoStartMs) || !Number.isFinite(videoEndMs) || videoEndMs <= videoStartMs) {
+          console.error("Bad video timestamps for", ymd, vid);
+          alert("Video metadata for " + ymd + " is incomplete.");
+          return;
+        }
+
+        const realSpanMs = videoEndMs - videoStartMs;
+
+        // 30-minute UT window centered on click
+        const HALF_WINDOW_MIN = 15;
+        let windowStartMs = clickMs - HALF_WINDOW_MIN * 60 * 1000;
+        let windowEndMs   = clickMs + HALF_WINDOW_MIN * 60 * 1000;
+
+        // Clamp to video coverage
+        if (windowStartMs < videoStartMs) windowStartMs = videoStartMs;
+        if (windowEndMs > videoEndMs)     windowEndMs   = videoEndMs;
+        if (windowEndMs < windowStartMs)  windowEndMs   = windowStartMs;
+
+        // Normalize positions within full video span
+        const startRawPos  = (windowStartMs - videoStartMs) / realSpanMs;
+        const endRawPos    = (windowEndMs   - videoStartMs) / realSpanMs;
+        const startNormPos = Math.min(1, Math.max(0, startRawPos));
+        const endNormPos   = Math.min(1, Math.max(0, endRawPos));
+
+        const clickIso    = new Date(clickMs).toISOString();
+        const winStartIso = new Date(windowStartMs).toISOString();
+        const winEndIso   = new Date(windowEndMs).toISOString();
+        const startIso    = new Date(videoStartMs).toISOString();
+        const endIso      = new Date(videoEndMs).toISOString();
+
+        console.log("Time mapping (window):", {
+          ymd,
+          clickIso,
+          winStartIso,
+          winEndIso,
+          startIso,
+          endIso,
+          realSpanSec: realSpanMs / 1000,
+          startNormPos,
+          endNormPos
+        });
+
+        // Display clicked UT in info box
+        const clickDate = new Date(clickMs);
+        const HH = clickDate.getUTCHours().toString().padStart(2, "0");
+        const MM = clickDate.getUTCMinutes().toString().padStart(2, "0");
+        const SS = clickDate.getUTCSeconds().toString().padStart(2, "0");
+
+        infoBox.textContent =
+          "Day " + ymd +
+          " | clicked UT ≈ " + HH + ":" + MM + ":" + SS +
+          "\nVideo: " + vid.video_file +
+          "\nWindow ≈ [ " + winStartIso + "  →  " + winEndIso + " ] (UT, ~" +
+          (2 * HALF_WINDOW_MIN) + " min span).";
+
+        const videoUrl = videoBase + vid.video_file;
+
+        // Use hidden <video> to read full duration, then open new tab with #t=start,end
+        player.pause();
+        player.removeAttribute("src");
+        player.load();
+
+        player.src = videoUrl;
+        player.load();
+
+        player.onloadedmetadata = () => {
+          const duration = player.duration;
+
+          let startSec = 0;
+          let endSec   = duration;
+
+          if (Number.isFinite(duration) && duration > 0) {
+            startSec = startNormPos * duration;
+            endSec   = endNormPos   * duration;
+
+            // Ensure at least a tiny span
+            if (endSec < startSec + 0.5) {
+              endSec = Math.min(duration, startSec + 0.5);
+            }
+          }
+
+          console.log("Video metadata loaded for #t fragment:", {
+            duration,
+            startNormPos,
+            endNormPos,
+            startSec,
+            endSec
+          });
+
+          const openUrl =
+            videoUrl +
+            "#t=" +
+            startSec.toFixed(1) + "," +
+            endSec.toFixed(1);
+
+          window.open(openUrl, "_blank");
+        };
+      }
+
+      // ---------------- HOVER HANDLER ----------------
+      function handleMouseMove(ev) {
+        const rect = img.getBoundingClientRect();
+        const x    = ev.clientX - rect.left;
+        const y    = ev.clientY - rect.top;
+
+        const relX = x / rect.width;
+        const relY = y / rect.height;
+
+        // Map Y to row index (same as click)
+        let rowFloat = relY * numRows;
+        let rowIndex = Math.round(rowFloat - 0.5);
+        if (rowIndex < 0) rowIndex = 0;
+        if (rowIndex >= numRows) rowIndex = numRows - 1;
+
+        const dayEntry = days[rowIndex];
+        const ymd      = String(dayEntry.ymd);
+        if (!/^\d{8}$/.test(ymd)) {
+          return;
+        }
+
+        // X → UT using global hour range
+        const fracHour      = globalH0 + relX * (globalH1 - globalH0);
+        const hourInt       = Math.floor(fracHour);
+        const minutesFloat  = (fracHour - hourInt) * 60;
+        const minuteInt     = Math.floor(minutesFloat);
+        const secondsFloat  = (minutesFloat - minuteInt) * 60;
+        let   secondInt     = Math.round(secondsFloat);
+
+        let h = hourInt;
+        let m = minuteInt;
+        let s = secondInt;
+
+        if (s >= 60) {
+          s -= 60;
+          m += 1;
+        }
+        if (m >= 60) {
+          m -= 60;
+          h += 1;
+        }
+
+        const year     = parseInt(ymd.slice(0, 4), 10);
+        const monthIdx = parseInt(ymd.slice(4, 6), 10) - 1;
+        const day      = parseInt(ymd.slice(6, 8), 10);
+
+        const hoverMs   = Date.UTC(year, monthIdx, day, h, m, s);
+        const hoverDate = new Date(hoverMs);
+
+        const Y  = hoverDate.getUTCFullYear();
+        const M  = (hoverDate.getUTCMonth() + 1).toString().padStart(2, "0");
+        const D  = hoverDate.getUTCDate().toString().padStart(2, "0");
+        const HH = hoverDate.getUTCHours().toString().padStart(2, "0");
+        const MM = hoverDate.getUTCMinutes().toString().padStart(2, "0");
+        const SS = hoverDate.getUTCSeconds().toString().padStart(2, "0");
+
+        const label = `${Y}-${M}-${D} ${HH}:${MM}:${SS} UT`;
+
+        tooltip.textContent   = label;
+        tooltip.style.left    = `${ev.pageX}px`;
+        tooltip.style.top     = `${ev.pageY}px`;
+        tooltip.style.opacity = "1";
+      }
+
+      function initAfterImageLoads() {
+        img.addEventListener("click", handleClick);
+        img.addEventListener("mousemove", handleMouseMove);
+        img.addEventListener("mouseleave", () => {
+          tooltip.style.opacity = "0";
+        });
+      }
+
+      if (img.complete) {
+        initAfterImageLoads();
+      } else {
+        img.addEventListener("load", initAfterImageLoads);
+      }
+
+      console.log("Keogram interactive init complete.");
+    }
+ 
+    init();
+
+  </script>
+</body>
+</html>

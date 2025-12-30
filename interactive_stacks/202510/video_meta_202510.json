@@ -1,0 +1,174 @@
+{
+  "year": 2025,
+  "month": 10,
+  "videos": [
+    {
+      "ymd": "20251001",
+      "video_file": "PKR_DASC_20251001_rgb_512.mp4",
+      "start_utc": "2025-10-01T04:03:34Z",
+      "end_utc": "2025-10-01T15:16:35Z"
+    },
+    {
+      "ymd": "20251002",
+      "video_file": "PKR_DASC_20251002_rgb_512.mp4",
+      "start_utc": "2025-10-02T04:00:10Z",
+      "end_utc": "2025-10-02T15:15:40Z"
+    },
+    {
+      "ymd": "20251003",
+      "video_file": "PKR_DASC_20251003_rgb_512.mp4",
+      "start_utc": "2025-10-03T03:56:18Z",
+      "end_utc": "2025-10-03T15:22:34Z"
+    },
+    {
+      "ymd": "20251004",
+      "video_file": "PKR_DASC_20251004_rgb_512.mp4",
+      "start_utc": "2025-10-04T03:52:38Z",
+      "end_utc": "2025-10-04T15:25:37Z"
+    },
+    {
+      "ymd": "20251005",
+      "video_file": "PKR_DASC_20251005_rgb_512.mp4",
+      "start_utc": "0925-10-05T03:50:31Z",
+      "end_utc": "0925-10-05T15:28:40Z"
+    },
+    {
+      "ymd": "20251006",
+      "video_file": "PKR_DASC_20251006_rgb_512.mp4",
+      "start_utc": "2025-10-06T03:45:24Z",
+      "end_utc": "2025-10-06T15:29:44Z"
+    },
+    {
+      "ymd": "20251007",
+      "video_file": "PKR_DASC_20251007_rgb_512.mp4",
+      "start_utc": "2025-10-07T03:42:41Z",
+      "end_utc": "2025-10-07T15:34:28Z"
+    },
+    {
+      "ymd": "20251008",
+      "video_file": "PKR_DASC_20251008_rgb_512.mp4",
+      "start_utc": "2025-10-08T03:38:17Z",
+      "end_utc": "2025-10-08T05:59:48Z"
+    },
+    {
+      "ymd": "20251009",
+      "video_file": "PKR_DASC_20251009_rgb_512.mp4",
+      "start_utc": "2025-10-09T03:36:35Z",
+      "end_utc": "2025-10-09T05:33:57Z"
+    },
+    {
+      "ymd": "20251010",
+      "video_file": "PKR_DASC_20251010_rgb_512.mp4",
+      "start_utc": "2025-10-10T03:32:38Z",
+      "end_utc": "2025-10-10T15:43:17Z"
+    },
+    {
+      "ymd": "20251011",
+      "video_file": "PKR_DASC_20251011_rgb_512.mp4",
+      "start_utc": "2025-10-11T03:31:37Z",
+      "end_utc": "2025-10-11T15:46:49Z"
+    },
+    {
+      "ymd": "20251012",
+      "video_file": "PKR_DASC_20251012_rgb_512.mp4",
+      "start_utc": "2025-10-12T03:24:11Z",
+      "end_utc": "2025-10-12T15:49:41Z"
+    },
+    {
+      "ymd": "20251013",
+      "video_file": "PKR_DASC_20251013_rgb_512.mp4",
+      "start_utc": "2025-10-13T03:20:42Z",
+      "end_utc": "2025-10-13T15:34:18Z"
+    },
+    {
+      "ymd": "20251015",
+      "video_file": "PKR_DASC_20251015_rgb_512.mp4",
+      "start_utc": "2025-10-15T03:14:43Z",
+      "end_utc": "2025-10-15T15:58:43Z"
+    },
+    {
+      "ymd": "20251016",
+      "video_file": "PKR_DASC_20251016_rgb_512.mp4",
+      "start_utc": "2025-10-16T03:11:36Z",
+      "end_utc": "2025-10-16T16:01:46Z"
+    },
+    {
+      "ymd": "20251017",
+      "video_file": "PKR_DASC_20251017_rgb_512.mp4",
+      "start_utc": "2025-10-17T03:08:05Z",
+      "end_utc": "2025-10-17T07:44:29Z"
+    },
+    {
+      "ymd": "20251019",
+      "video_file": "PKR_DASC_20251019_rgb_512.mp4",
+      "start_utc": "2025-10-19T03:03:08Z",
+      "end_utc": "2025-10-19T16:10:49Z"
+    },
+    {
+      "ymd": "20251020",
+      "video_file": "PKR_DASC_20251020_rgb_512.mp4",
+      "start_utc": "2025-10-20T03:02:49Z",
+      "end_utc": "2025-10-20T16:07:52Z"
+    },
+    {
+      "ymd": "20251021",
+      "video_file": "PKR_DASC_20251021_rgb_512.mp4",
+      "start_utc": "2025-10-21T02:58:46Z",
+      "end_utc": "2025-10-21T16:14:44Z"
+    },
+    {
+      "ymd": "20251022",
+      "video_file": "PKR_DASC_20251022_rgb_512.mp4",
+      "start_utc": "2025-10-22T02:50:12Z",
+      "end_utc": "2025-10-22T16:17:26Z"
+    },
+    {
+      "ymd": "20251023",
+      "video_file": "PKR_DASC_20251023_rgb_512.mp4",
+      "start_utc": "2025-10-23T02:54:34Z",
+      "end_utc": "2025-10-23T16:20:28Z"
+    },
+    {
+      "ymd": "20251024",
+      "video_file": "PKR_DASC_20251024_rgb_512.mp4",
+      "start_utc": "2025-10-24T02:43:38Z",
+      "end_utc": "2025-10-24T16:23:44Z"
+    },
+    {
+      "ymd": "20251025",
+      "video_file": "PKR_DASC_20251025_rgb_512.mp4",
+      "start_utc": "2025-10-25T02:40:23Z",
+      "end_utc": "2025-10-25T16:24:15Z"
+    },
+    {
+      "ymd": "20251026",
+      "video_file": "PKR_DASC_20251026_rgb_512.mp4",
+      "start_utc": "2025-10-26T02:41:46Z",
+      "end_utc": "2025-10-26T16:30:42Z"
+    },
+    {
+      "ymd": "20251027",
+      "video_file": "PKR_DASC_20251027_rgb_512.mp4",
+      "start_utc": "2025-10-27T02:34:00Z",
+      "end_utc": "2025-10-27T16:29:46Z"
+    },
+    {
+      "ymd": "20251028",
+      "video_file": "PKR_DASC_20251028_rgb_512.mp4",
+      "start_utc": "2025-10-28T02:30:50Z",
+      "end_utc": "2025-10-28T16:36:59Z"
+    },
+    {
+      "ymd": "20251029",
+      "video_file": "PKR_DASC_20251029_rgb_512.mp4",
+      "start_utc": "2025-10-29T02:27:40Z",
+      "end_utc": "2025-10-29T11:36:54Z"
+    },
+    {
+      "ymd": "20251030",
+      "video_file": "PKR_DASC_20251030_rgb_512.mp4",
+      "start_utc": "2025-10-30T02:30:06Z",
+      "end_utc": "2025-10-30T16:43:54Z"
+    }
+  ]
+}
