@@ -1,5 +1,10 @@
 Pillow
+beautifulsoup4
+matplotlib
+netCDF4
+numpy
 opencv-python-headless
+pandas
 pytesseract
 requests
 urllib3
