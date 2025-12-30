@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import re
 import json
 from pathlib import Path
@@ -184,6 +185,19 @@ def build_meta(year: int, month: int, out_path: str):
     print(f"Global hour range: {global_h0:.2f}–{global_h1:.2f} UT")
     print(f"Days in stack: {[d['ymd'] for d in day_entries]}")
 
+def parse_year_month(raw: str) -> tuple[int, int]:
+    m = re.fullmatch(r"(\d{4})(\d{2})", raw)
+    if not m:
+        raise ValueError("Please enter 6 digits in the form YYYYMM.")
+
+    year = int(m.group(1))
+    month = int(m.group(2))
+    if 1 <= month <= 12:
+        return year, month
+
+    raise ValueError("Month must be between 01 and 12.")
+
+
 def prompt_year_month() -> tuple[int, int]:
     """
     Prompt for YYYYMM and return (year, month).
@@ -191,22 +205,26 @@ def prompt_year_month() -> tuple[int, int]:
     prompt = "Enter target month as YYYYMM (e.g., 202511): "
     while True:
         raw = input(prompt).strip()
-        m = re.fullmatch(r"(\d{4})(\d{2})", raw)
-        if not m:
-            print("  Please enter 6 digits in the form YYYYMM.", file=sys.stderr)
-            continue
-
-        year = int(m.group(1))
-        month = int(m.group(2))
-        if 1 <= month <= 12:
-            return year, month
-
-        print("  Month must be between 01 and 12.", file=sys.stderr)
+        try:
+            return parse_year_month(raw)
+        except ValueError as exc:
+            print(f"  {exc}", file=sys.stderr)
 
 
 if __name__ == "__main__":
-    YEAR, MONTH = prompt_year_month()
-    stack_dir = Path("/Users/anniepflaum/Documents/keogram_project/interactive_stack") / f"{YEAR}{MONTH:02d}"
+    parser = argparse.ArgumentParser(description="Build keogram metadata for a month.")
+    parser.add_argument("--month", help="Target month in YYYYMM format")
+    args = parser.parse_args()
+
+    if args.month:
+        try:
+            YEAR, MONTH = parse_year_month(args.month)
+        except ValueError as exc:
+            print(f"  {exc}", file=sys.stderr)
+            sys.exit(1)
+    else:
+        YEAR, MONTH = prompt_year_month()
+    stack_dir = Path("/Users/anniepflaum/Documents/keogram_project/interactive_stacks") / f"{YEAR}{MONTH:02d}"
     stack_dir.mkdir(parents=True, exist_ok=True)  # ensure YYYYMM folder exists
 
     out_path = stack_dir / f"keogram_meta_{YEAR}{MONTH:02d}.json"

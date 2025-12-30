@@ -7,6 +7,7 @@ from collections import deque
 import json
 import re
 import tempfile
+import argparse
 
 import cv2
 import pytesseract
@@ -279,6 +280,19 @@ def dt_to_iso(dt: datetime | None) -> str | None:
     return dt.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
+def parse_year_month(raw: str) -> tuple[int, int]:
+    m = re.fullmatch(r"(\d{4})(\d{2})", raw)
+    if not m:
+        raise ValueError("Please enter 6 digits in the form YYYYMM.")
+
+    year = int(m.group(1))
+    month = int(m.group(2))
+    if 1 <= month <= 12:
+        return year, month
+
+    raise ValueError("Month must be between 01 and 12.")
+
+
 def prompt_year_month() -> tuple[int, int]:
     """
     Prompt for YYYYMM and return (year, month).
@@ -286,23 +300,27 @@ def prompt_year_month() -> tuple[int, int]:
     prompt = "Enter target month as YYYYMM (e.g., 202511): "
     while True:
         raw = input(prompt).strip()
-        m = re.fullmatch(r"(\d{4})(\d{2})", raw)
-        if not m:
-            print("  Please enter 6 digits in the form YYYYMM.", file=sys.stderr)
-            continue
-
-        year = int(m.group(1))
-        month = int(m.group(2))
-        if 1 <= month <= 12:
-            return year, month
-
-        print("  Month must be between 01 and 12.", file=sys.stderr)
+        try:
+            return parse_year_month(raw)
+        except ValueError as exc:
+            print(f"  {exc}", file=sys.stderr)
 
 
 def main():
-    year, month = prompt_year_month()
+    parser = argparse.ArgumentParser(description="Build video metadata for a month.")
+    parser.add_argument("--month", help="Target month in YYYYMM format")
+    args = parser.parse_args()
 
-    stack_dir = Path("/Users/anniepflaum/Documents/keogram_project/interactive_stack") / f"{year}{month:02d}"
+    if args.month:
+        try:
+            year, month = parse_year_month(args.month)
+        except ValueError as exc:
+            print(f"  {exc}", file=sys.stderr)
+            sys.exit(1)
+    else:
+        year, month = prompt_year_month()
+
+    stack_dir = Path("/Users/anniepflaum/Documents/keogram_project/interactive_stacks") / f"{year}{month:02d}"
     stack_dir.mkdir(parents=True, exist_ok=True)  # ensure YYYYMM folder exists
 
     out_path = stack_dir / f"video_meta_{year}{month:02d}.json"

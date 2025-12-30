@@ -160,7 +160,7 @@ def stack_keograms_for_month(ym: str,
     month = int(ym[4:6])
 
     out_path = output_dir / str(year) / f"stacked_keograms_{ym}.png"
-    interactive_dir = Path.home() / "Documents" / "keogram_project" / "interactive_stack" / f"{year}{month:02d}"
+    interactive_dir = Path.home() / "Documents" / "keogram_project" / "interactive_stacks" / f"{year}{month:02d}"
     interactive_path = interactive_dir / out_path.name
 
     if skip_existing and out_path.exists():
