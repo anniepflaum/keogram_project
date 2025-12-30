@@ -27,9 +27,7 @@ allsky videos: https://optics.gi.alaska.edu/realtime/data/MPEG/PKR_DASC_512/
 
 # Instructions for creating an interactive stack
 1. Clone git
-  ```
-  git clone https://github.com/anniepflaum/keogram-plots
-  ```
+    git clone https://github.com/anniepflaum/keogram-plots
 2. Activate virtual environment
     python3 -m venv .venv
     source .venv/bin/activate
