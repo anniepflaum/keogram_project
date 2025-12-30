@@ -4,6 +4,7 @@ GOES-18 data: https://data.ngdc.noaa.gov/platforms/solar-space-observing-satelli
 keograms: https://optics.gi.alaska.edu/amisr_archive/Processed_data/aurorax/stream2/
 allsky videos: https://optics.gi.alaska.edu/realtime/data/MPEG/PKR_DASC_512/
 
+```bash
 ~/Documents/keogram_project/ <br />
 ├──interactive_stacks/               # contains necessary files to create keogram_YYYYMM.html within YYYYMM folders <br />
 │  └──YYYYMM/ <br />
@@ -22,6 +23,7 @@ allsky videos: https://optics.gi.alaska.edu/realtime/data/MPEG/PKR_DASC_512/
    ├──build_video_meta.py             # writes json with info on each allsky video within requested month <br />
    ├──build_stack_html.py             # creates insteractive stack html <br />
    └──build_interactive_stack.py      # runs 4 above scripts (build_....py) for requsted month all at once <br />
+```
 
 # Instructions for creating an interactive stack
 1. Clone git
