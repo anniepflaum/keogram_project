@@ -1,8 +1,8 @@
 # Raw data/images
-DSCOVR data: https://www.ngdc.noaa.gov/dscovr/portal/index.html#/download/1763510400000;1763855999999/mg1 <br \>
-GOES-18 data: https://data.ngdc.noaa.gov/platforms/solar-space-observing-satellites/goes/goes18/l1b/mag-l1b-flat/ <br \>
-keograms: https://optics.gi.alaska.edu/amisr_archive/Processed_data/aurorax/stream2/ <br \>
-allsky videos: https://optics.gi.alaska.edu/realtime/data/MPEG/PKR_DASC_512/ <br \>
+DSCOVR data: https://www.ngdc.noaa.gov/dscovr/portal/index.html#/download/1763510400000;1763855999999/mg1 <br />
+GOES-18 data: https://data.ngdc.noaa.gov/platforms/solar-space-observing-satellites/goes/goes18/l1b/mag-l1b-flat/ <br />
+keograms: https://optics.gi.alaska.edu/amisr_archive/Processed_data/aurorax/stream2/ <br />
+allsky videos: https://optics.gi.alaska.edu/realtime/data/MPEG/PKR_DASC_512/ <br />
 
 ```bash
 ~/Documents/keogram_project/
