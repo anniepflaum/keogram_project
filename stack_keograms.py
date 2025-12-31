@@ -160,7 +160,7 @@ def stack_keograms_for_month(ym: str,
     month = int(ym[4:6])
 
     out_path = output_dir / str(year) / f"stacked_keograms_{ym}.png"
-    interactive_dir = Path.home() / "Documents" / "keogram_project" / "interactive_stacks" / f"{year}{month:02d}"
+    interactive_dir = Path.home()  / "keogram_project" / "interactive_stacks" / f"{year}{month:02d}"
     interactive_path = interactive_dir / out_path.name
 
     if skip_existing and out_path.exists():
@@ -258,7 +258,7 @@ if __name__ == "__main__":
     parser.add_argument("--month", help="Month to stack, format YYYYMM")
     parser.add_argument("--station", default=DEFAULT_STATION, help="Station folder (default: pfrr_amisr01)")
     parser.add_argument("--camera", default=DEFAULT_CAMERA, help="Camera code in filename (default: asi3)")
-    parser.add_argument("--out", default=str(Path.home() / "Documents" / "keogram_project" / "stacked_by_month"),
+    parser.add_argument("--out", default=str(Path.home() / "keogram_project" / "stacked_by_month"),
                         help="Output folder for stacked images")
     parser.add_argument("--aspect", type=float, default=10.0, help="Width:height ratio to enforce on each keogram")
     parser.add_argument("--hours", default="6,12", help="Comma-separated UTC hours to draw reference lines")

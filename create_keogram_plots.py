@@ -19,8 +19,8 @@ CAMERA     = "asi3"   # ..._asi3_rgb-keogram.png
 GOES_BASE  = "https://data.ngdc.noaa.gov/platforms/solar-space-observing-satellites/goes/goes18/l1b/mag-l1b-flat"
 DSCVR_BASE = "https://www.ngdc.noaa.gov/dscovr/data"
 
-OUT_FULL   = Path.home() / "Documents" / "keogram_project" / "overlaid_full"
-OUT_PART   = Path.home() / "Documents" / "keogram_project" / "overlaid_partial"
+OUT_FULL   = Path.home() / "keogram_project" / "overlaid_full"
+OUT_PART   = Path.home() / "keogram_project" / "overlaid_partial"
 OUT_FULL.mkdir(parents=True, exist_ok=True)
 OUT_PART.mkdir(parents=True, exist_ok=True)
 

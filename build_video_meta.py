@@ -320,7 +320,7 @@ def main():
     else:
         year, month = prompt_year_month()
 
-    stack_dir = Path("/Users/anniepflaum/Documents/keogram_project/interactive_stacks") / f"{year}{month:02d}"
+    stack_dir = Path("/Users/anniepflaum/keogram_project/interactive_stacks") / f"{year}{month:02d}"
     stack_dir.mkdir(parents=True, exist_ok=True)  # ensure YYYYMM folder exists
 
     out_path = stack_dir / f"video_meta_{year}{month:02d}.json"
