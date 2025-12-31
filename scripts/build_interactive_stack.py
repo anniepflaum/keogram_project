@@ -44,7 +44,7 @@ def main() -> None:
     run_script(scripts_dir / "build_keogram_meta.py", args=["--month", ym])
     run_script(scripts_dir / "build_video_meta.py", args=["--month", ym])
     run_script(scripts_dir / "stack_keograms.py", args=["--month", ym])
-    run_script(scripts_dir / "build_keogram_html.py", args=["--month", ym])
+    run_script(scripts_dir / "build_stack_html.py", args=["--month", ym])
 
 
 if __name__ == "__main__":

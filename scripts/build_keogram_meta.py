@@ -224,7 +224,7 @@ if __name__ == "__main__":
             sys.exit(1)
     else:
         YEAR, MONTH = prompt_year_month()
-    stack_dir = Path("/Users/anniepflaum/Documents/keogram_project/interactive_stacks") / f"{YEAR}{MONTH:02d}"
+    stack_dir = Path("/Users/anniepflaum/keogram_project/interactive_stacks") / f"{YEAR}{MONTH:02d}"
     stack_dir.mkdir(parents=True, exist_ok=True)  # ensure YYYYMM folder exists
 
     out_path = stack_dir / f"keogram_meta_{YEAR}{MONTH:02d}.json"

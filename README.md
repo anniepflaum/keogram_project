@@ -6,23 +6,23 @@ allsky videos: https://optics.gi.alaska.edu/realtime/data/MPEG/PKR_DASC_512/ <br
 
 ```bash
 keogram_project/
-├──interactive_stacks/               # contains necessary files to create keogram_YYYYMM.html within YYYYMM folders
+├──interactive_stacks/                 # contains necessary files to create keogram_YYYYMM.html within YYYYMM folders
 │  └──YYYYMM/
 │     ├──stacked_keograms_YYYYMM.png   # output from stack_keograms.py (year/stacked_keograms_YYYYMM.png)
 │     ├──keogram_YYYYMM.html           # currently created by duplicating similar .html and adjusting for appropriate YYYYMM
 │     ├──keogram_meta_YYYYMM.json      # output from build_keogram_meta.py
 │     └──video_meta_YYYYMM.json        # output from build_video_meta.py
-├──overlaid_full/                    # outputs from create_keogram_plots.py (full)
-├──overlaid_partial/                 # outputs from create_keogram_plots.py (partial)
-├──stacked_by_month/                 # outputs from stack_keograms.py (year/stacked_keograms_YYYYMM.png)
-└──scripts/                          # the Python scripts (in Git)
-   ├──requirements.txt                # must install before attempting to run any scripts
-   ├──create_keogram_plots.py         # overlays keograms with GOES and DSCOVR data, either range of dates or range of hours
-   ├──stack_keograms.py               # stacks all keograms from requested month verticaly, no overlaid data
-   ├──build_keogram_meta.py           # writes json with info on each keogram within requested month
-   ├──build_video_meta.py             # writes json with info on each allsky video within requested month
-   ├──build_stack_html.py             # creates insteractive stack html
-   └──build_interactive_stack.py      # runs 4 above scripts (build_....py) for requsted month all at once
+├──overlaid_full/                      # outputs from create_keogram_plots.py (full)
+├──overlaid_partial/                   # outputs from create_keogram_plots.py (partial)
+├──stacked_by_month/                   # outputs from stack_keograms.py (year/stacked_keograms_YYYYMM.png)
+└──scripts/                            # the Python scripts (in Git)
+   ├──requirements.txt                 # must install before attempting to run any scripts
+   ├──create_keogram_plots.py          # overlays keograms with GOES and DSCOVR data, either range of dates or range of hours
+   ├──stack_keograms.py                # stacks all keograms from requested month verticaly, no overlaid data
+   ├──build_keogram_meta.py            # writes json with info on each keogram within requested month
+   ├──build_video_meta.py              # writes json with info on each allsky video within requested month
+   ├──build_stack_html.py              # creates insteractive stack html
+   └──build_interactive_stack.py       # runs 4 above scripts (build_....py) for requsted month all at once
 ```
 
 # Instructions for creating an interactive stack
@@ -42,5 +42,6 @@ pip install -r requirements.txt
 ```
 4. Run build_interactive_stack.py
 ```
+cd ./scripts
 python3 build_interactive_stack.py
 ```

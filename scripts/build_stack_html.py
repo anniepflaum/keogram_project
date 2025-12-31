@@ -14,7 +14,7 @@ from pathlib import Path
 from string import Template
 
 
-BASE_DIR = Path.home() / "Documents" / "keogram_project"
+BASE_DIR = Path.home() / "keogram_project"
 INTERACTIVE_ROOT = BASE_DIR / "interactive_stacks"
 
 
